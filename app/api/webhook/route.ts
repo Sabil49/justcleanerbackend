@@ -7,6 +7,9 @@ import Stripe from 'stripe';
 export async function POST(request: NextRequest) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
+  const date = new Date();
+  const premiumExpiryDate = date.setDate(date.getDate() + 30);
+  
 
   if (!signature) {
     return NextResponse.json(
@@ -23,8 +26,8 @@ export async function POST(request: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (error: any) {
-    console.error('Webhook signature verification failed:', error.message);
+  } catch (error: unknown) {
+    console.error('Webhook signature verification failed:', (error as Error).message);
     return NextResponse.json(
       { error: 'Invalid signature' },
       { status: 400 }
@@ -36,13 +39,13 @@ export async function POST(request: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.userId;
-
+        
         if (userId) {
           const subscription = await stripe.subscriptions.retrieve(
             session.subscription as string
           );
 
-          const premiumExpiry = new Date(subscription.current_period_end * 1000);
+          const premiumExpiry = premiumExpiryDate;
 
           await prisma.user.update({
             where: { id: userId },
@@ -62,7 +65,7 @@ export async function POST(request: NextRequest) {
         const userId = subscription.metadata?.userId;
 
         if (userId) {
-          const premiumExpiry = new Date(subscription.current_period_end * 1000);
+          const premiumExpiry = premiumExpiryDate;
           const isPremium = subscription.status === 'active';
 
           await prisma.user.update({
