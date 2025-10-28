@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
             session.subscription as string
           );
 
-          const premiumExpiry = premiumExpiryDate;
+          const premiumExpiry = premiumExpiryDate.toString();
 
           await prisma.user.update({
             where: { id: userId },
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
         const userId = subscription.metadata?.userId;
 
         if (userId) {
-          const premiumExpiry = premiumExpiryDate;
+          const premiumExpiry = premiumExpiryDate.toString();
           const isPremium = subscription.status === 'active';
 
           await prisma.user.update({
