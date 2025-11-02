@@ -20,7 +20,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export async function generateToken(payload: JWTPayload): Promise<string> {
-  return "this is a stub token"; //jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 export async function verifyToken(token: string): Promise<JWTPayload | null> {
