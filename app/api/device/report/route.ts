@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
       take: 20,
     });
     if (!reports || reports.length === 0) {
-      return NextResponse.json({ error: 'No reports found' }, { status: 404 });
+      return NextResponse.json({ error: 'No reports found', message: 'No reports found' }, { status: 404 });
     }
     const totalFreed = await prisma.report.aggregate({
       where: { userId: user.userId },
