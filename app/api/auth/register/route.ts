@@ -51,21 +51,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Generate token
-    const token = generateToken({
-      userId: user.id,
-      email: user.email,
-      isPremium: user.isPremium,
-    });
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Failed to generate token' },
-        { status: 500 }
-      );
-    }
+    
     return NextResponse.json({
       user,
-      token,
       message: 'Registration successful',
     }, { status: 201 });
 
