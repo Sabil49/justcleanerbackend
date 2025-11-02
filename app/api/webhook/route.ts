@@ -1,7 +1,7 @@
 // app/api/subscription/webhook/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '../../../lib/stripe';
-import { prisma } from '../../../lib/db';
+import { stripe } from '@/lib/stripe';
+import { prisma } from '@/lib/db';
 import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
