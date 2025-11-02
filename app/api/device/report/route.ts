@@ -47,18 +47,24 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const user = await requireAuth(request);
-
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     const reports = await prisma.report.findMany({
       where: { userId: user.userId },
       orderBy: { timestamp: 'desc' },
       take: 20,
     });
-
+    if (!reports || reports.length === 0) {
+      return NextResponse.json({ error: 'No reports found' }, { status: 404 });
+    }
     const totalFreed = await prisma.report.aggregate({
       where: { userId: user.userId },
       _sum: { storageFreed: true },
     });
-
+    if (!totalFreed) {
+      return NextResponse.json({ error: 'Failed to calculate total space freed' }, { status: 500 });
+    }
     return NextResponse.json({
       reports,
       totalSpaceFreed: totalFreed._sum.storageFreed || 0,
