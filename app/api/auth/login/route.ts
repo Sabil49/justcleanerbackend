@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     });
     if (!token) {
       return NextResponse.json(
-        { error: 'Failed to generate token' },
+        { error: 'Failed to generate token. Please try again later.' },
         { status: 500 }
       );
     }

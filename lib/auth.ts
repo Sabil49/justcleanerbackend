@@ -22,7 +22,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return bcrypt.compare(password, hash);
 }
 
-export function generateToken(payload: JWTPayload): string {
+export async function generateToken(payload: JWTPayload): Promise<string> {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
