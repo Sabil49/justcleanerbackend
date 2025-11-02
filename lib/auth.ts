@@ -2,7 +2,10 @@ import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { NextRequest } from 'next/server';
 
-const JWT_SECRET: jwt.Secret = (process.env.JWT_SECRET ?? 'fallback-secret-key');
+if (!process.env.JWT_SECRET) {
+  throw new Error('Missing JWT_SECRET environment variable');
+}
+const JWT_SECRET: jwt.Secret = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN: jwt.SignOptions['expiresIn'] = (process.env.JWT_EXPIRES_IN ?? '7d') as unknown as jwt.SignOptions['expiresIn'];
 
 export interface JWTPayload {
@@ -19,13 +22,13 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return bcrypt.compare(password, hash);
 }
 
-export async function generateToken(payload: JWTPayload): Promise<string> {
+export function generateToken(payload: JWTPayload): string {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
-    return await jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return jwt.verify(token, JWT_SECRET) as JWTPayload;
   } catch (error) {
     return null;
   }

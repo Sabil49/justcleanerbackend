@@ -2,7 +2,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { verifyPassword, generateToken } from '@/lib/auth';
-
+import dotenv from 'dotenv';
+dotenv.config();
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
+console.log('JWT_EXPIRES_IN:', process.env.JWT_EXPIRES_IN);
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
