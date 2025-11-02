@@ -57,7 +57,12 @@ export async function POST(request: NextRequest) {
       email: user.email,
       isPremium: user.isPremium,
     });
-
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Failed to generate token' },
+        { status: 500 }
+      );
+    }
     return NextResponse.json({
       user,
       token,
