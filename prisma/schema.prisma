@@ -16,6 +16,7 @@ model User {
   password      String
   isPremium     Boolean   @default(false)
   premiumExpiry DateTime?
+  // settings now stores: { pushToken, platform, pushNotificationsEnabled }
   settings      Json?     @default("{}")
   reports       Report[]
   cleanLogs     CleanLog[]
@@ -23,6 +24,7 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   @@index([email])
+  @@index([isPremium])
 }
 
 model Report {
