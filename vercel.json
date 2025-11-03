@@ -7,10 +7,6 @@
     {
       "path": "/api/cron/weekly-stats",
       "schedule": "0 10 * * 0"
-    },
-    {
-      "path": "/api/cron/re-engagement",
-      "schedule": "0 14 * * *"
     }
   ]
 }
