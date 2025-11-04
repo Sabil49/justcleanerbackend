@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
       where: {
         isPremium: false,
         updatedAt: {
-          lt: oneDayAgo,
+          gt: oneDayAgo,
         },
       },
       select: {
