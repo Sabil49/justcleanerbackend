@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
             },
           });
 
-          console.log(`Premium activated for user ${userId}`);
+          
         }
         break;
       }
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
             },
           });
 
-          console.log(`Subscription updated for user ${userId}`);
+         
         }
         break;
       }
@@ -94,13 +94,12 @@ export async function POST(request: NextRequest) {
             },
           });
 
-          console.log(`Premium cancelled for user ${userId}`);
+          (`Premium cancelled for user ${userId}`);
         }
         break;
       }
-
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        null
     }
 
     return NextResponse.json({ received: true });

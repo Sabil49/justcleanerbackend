@@ -18,10 +18,7 @@ export async function GET(request: NextRequest) {
     // Find non-premium users who haven't been active recently
     const inactiveUsers = await prisma.user.findMany({
       where: {
-        isPremium: false,
-        updatedAt: {
-          gt: oneDayAgo,
-        },
+        isPremium: false
       },
       select: {
         id: true,
