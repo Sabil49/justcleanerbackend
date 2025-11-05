@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       reports,
       totalSpaceFreed: totalFreed._sum.storageFreed || 0,
       batterySaved: (batterySaved._sum.batteryBefore || 0) - (batterySaved._sum.batteryAfter || 0),
-      appsOptimized: appsOptimized,
+      appsOptimized: appsOptimized._sum.filesRemoved || 0,
       junkRemoved: junkRemoved._sum.filesRemoved || 0,
       cleaningSessions: cleaningSessions,
     });
