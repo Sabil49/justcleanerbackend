@@ -49,6 +49,8 @@ model CleanLog {
   spaceFreed  Float    // in MB
   timestamp   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  batteryBefore Int?
+  batteryAfter Int?
 
   @@index([userId])
   @@index([timestamp])
