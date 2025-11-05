@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'subscription',
-      success_url: `${appUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/subscription/cancel`,
+      success_url: `justcleaner://subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `justcleaner://subscription/cancel`,
       metadata: {
         userId: user.userId,
         planId,
