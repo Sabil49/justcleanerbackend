@@ -62,12 +62,43 @@ export async function GET(request: NextRequest) {
       where: { userId: user.userId },
       _sum: { storageFreed: true },
     });
-    if (!totalFreed) {
-      return NextResponse.json({ error: 'Failed to calculate total space freed' }, { status: 500 });
+
+    const batterySaved = await prisma.cleanLog.aggregate({
+      where: { userId: user.userId },
+      _sum: {
+        batteryBefore: true,
+        batteryAfter: true,
+      },
+    });
+    const appsOptimized = await prisma.cleanLog.count({
+      where: { userId: user.userId, cleanType: 'battery' },
+    });
+
+    const junkRemoved = await prisma.cleanLog.aggregate({
+      where: { userId: user.userId, cleanType: 'junk' },
+      _sum: { filesRemoved: true },
+    });
+
+    const cleaningSessions = await prisma.cleanLog.count({
+      where: { userId: user.userId },
+    });
+    if (!batterySaved) {
+      return NextResponse.json({ error: 'No clean logs found', message: 'No clean logs found' }, { status: 404 });
     }
+    if (!totalFreed) {
+      return NextResponse.json({ error: 'No reports found', message: 'No reports found' }, { status: 404 });
+    }
+    if (appsOptimized === null || appsOptimized === undefined) {
+      return NextResponse.json({ error: 'No clean logs found', message: 'No clean logs found' }, { status: 404 });
+    }
+    
     return NextResponse.json({
       reports,
       totalSpaceFreed: totalFreed._sum.storageFreed || 0,
+      batterySaved: (batterySaved._sum.batteryBefore || 0) - (batterySaved._sum.batteryAfter || 0),
+      appsOptimized,
+      junkRemoved: junkRemoved._sum.filesRemoved || 0,
+      cleaningSessions,
     });
 
   } catch (error: unknown) {
