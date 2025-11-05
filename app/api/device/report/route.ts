@@ -70,8 +70,9 @@ export async function GET(request: NextRequest) {
         batteryAfter: true,
       },
     });
-    const appsOptimized = await prisma.cleanLog.count({
-      where: { userId: user.userId, cleanType: 'battery' },
+    const appsOptimized = await prisma.cleanLog.aggregate({
+      where: { userId: user.userId, cleanType: 'cache' },
+      _sum: { filesRemoved: true },
     });
 
     const junkRemoved = await prisma.cleanLog.aggregate({
