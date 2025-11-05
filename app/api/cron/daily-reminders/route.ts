@@ -13,28 +13,22 @@ export async function GET(request: NextRequest) {
     }
 
     const now = new Date();
-    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const oneDayAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+
 
     // Find non-premium users who haven't been active recently
-    const inactiveUsers = await prisma.user.findMany({
-      where: {
-        isPremium: false,
-        updatedAt: {
-          lt: oneDayAgo,
-        },
+    const user = {
+      settings: {
+        pushToken: 'ExponentPushToken[Lr8GYZN8RV-BkHZrnG4eBW]',
+        pushNotificationsEnabled: true,
       },
-      select: {
-        id: true,
-        name: true,
-        settings: true,
-        cleanLogs: {
-          take: 1,
-          orderBy: { timestamp: 'desc' },
-        },
-      },
-    });
+      cleanLogs: [
+        { spaceFreed: 250 }
+      ],
 
-    const notifications = inactiveUsers
+    }
+
+    const notifications = [user]
       .filter((user: any) => {
         const settings = user.settings as any;
         return settings?.pushToken && settings?.pushNotificationsEnabled;
