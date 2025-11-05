@@ -70,9 +70,8 @@ export async function GET(request: NextRequest) {
         batteryAfter: true,
       },
     });
-    const appsOptimized = await prisma.cleanLog.aggregate({
+    const appsOptimized = await prisma.cleanLog.count({
       where: { userId: user.userId, cleanType: 'cache' },
-      _sum: { filesRemoved: true },
     });
 
     const junkRemoved = await prisma.cleanLog.aggregate({
@@ -97,7 +96,7 @@ export async function GET(request: NextRequest) {
       reports,
       totalSpaceFreed: totalFreed._sum.storageFreed || 0,
       batterySaved: (batterySaved._sum.batteryBefore || 0) - (batterySaved._sum.batteryAfter || 0),
-      appsOptimized: appsOptimized._sum.filesRemoved || 0,
+      appsOptimized: appsOptimized,
       junkRemoved: junkRemoved._sum.filesRemoved || 0,
       cleaningSessions: cleaningSessions,
     });
